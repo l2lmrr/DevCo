@@ -1,1 +1,0 @@
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoSi3XALV9oNxmo2sHReU_CL_xajYZu3pjgQ&s" alt="">
