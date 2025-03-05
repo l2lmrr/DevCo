@@ -6,6 +6,7 @@ use App\Models\Posts;
 use App\Models\Content;
 use App\Models\Likes;
 use Illuminate\Http\Request;
+use App\Models\Connections;
 
 class PostsController extends Controller
 {
@@ -105,8 +106,17 @@ class PostsController extends Controller
 
     public function dashboard()
     {
+        $user = auth()->user();
+
+        $postCount = Posts::where('user_id', $user->id)->count();
+    
+        $connectionCount = Connections::where('user_id', $user->id)->count();
+
         $posts = Posts::with('content')->orderBy('created_at', 'desc')->get();
-        return view('dashboard', compact('posts'));
+    
+        
+        $posts = Posts::with('content')->orderBy('created_at', 'desc')->get();
+        return view('dashboard', compact('posts', 'postCount', 'connectionCount'));
     }
 
     public function toggleLike(Posts $post)

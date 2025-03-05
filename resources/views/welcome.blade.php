@@ -1,174 +1,125 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DevConnect</title>
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    <!-- Styles / Scripts -->
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @else
-        <style>
-            /* Fallback Tailwind CSS */
-            /* Add your fallback styles here if needed */
-        </style>
-    @endif
-    <!-- Custom CSS for Animations -->
-    <style>
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        @keyframes gradientBackground {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-        @keyframes floating {
-            0% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-            100% {
-                transform: translateY(0);
-            }
-        }
-        .animate-fadeInUp {
-            animation: fadeInUp 0.8s ease-out;
-        }
-        .gradient-black {
-            background: linear-gradient(135deg, #1a1a1a, #000000);
-        }
-        .gradient-text {
-            background: linear-gradient(135deg, #1a1a1a, #000000);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .gradient-border {
-            border: 2px solid transparent;
-            background: linear-gradient(white, white) padding-box,
-                        linear-gradient(135deg, #1a1a1a, #000000) border-box;
-        }
-        .animated-background {
-            background: linear-gradient(-45deg, #ffffff, #f0f0f0, #e0e0e0, #ffffff);
-            background-size: 400% 400%;
-            animation: gradientBackground 10s ease infinite;
-        }
-        .floating {
-            animation: floating 3s ease-in-out infinite;
-        }
-        .card-hover {
-            transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
-        }
-        .card-hover:hover {
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            transform: translateY(-5px);
-        }
-    </style>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js for interactivity -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="font-sans antialiased bg-white text-gray-900">
+<body class="bg-gray-50 font-sans antialiased">
     <!-- Header -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-xl font-semibold gradient-text">DevConnect</div>
-            <nav class="flex items-center space-x-4">
+            <div class="text-2xl font-bold text-indigo-600">DevConnect</div>
+            <nav class="flex space-x-4">
+            <div class="text-xl font-bold text-indigo-600"></div>
                 @if (Route::has('login'))
-                    @auth
-                        <a href="{{ url('/home') }}" class="text-gray-700 hover:text-gray-900 transition duration-150 ease-in-out">
-                            
-                        </a>
-                    @else
-                        <a href="{{ route('login') }}" class="text-gray-700 hover:text-gray-900 transition duration-150 ease-in-out">
-                            Log in
-                        </a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="text-gray-700 hover:text-gray-900 transition duration-150 ease-in-out">
-                                Register
-                            </a>
-                        @endif
-                    @endauth
+                    <nav class="flex items-center space-x-4">
+                        @auth
+                            <a href="{{ url('/dashboard') }}" class="nav-link">Dashboard</a>
+                        @else
+                            <a href="{{ route('login') }}" class="nav-link">Log in</a>
+                            @if (Route::has('register'))
+                                <a href="{{ route('register') }}" class="nav-link">Register</a>
+                            @endif
+                        @endauth
+                    </nav>
                 @endif
+            </div>
             </nav>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="animated-background py-32 relative overflow-hidden">
-        <div class="container mx-auto px-6 text-center animate-fadeInUp">
-            <h1 class="text-6xl font-bold mb-6 gradient-text floating">Bienvenue sur DevConnect</h1>
-            <p class="text-xl mb-8 max-w-2xl mx-auto text-gray-700">
-                Le réseau social dédié aux développeurs pour partager, collaborer et innover ensemble.
-            </p>
-            <a href="#" class="inline-block gradient-black text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:opacity-90 transition duration-150 ease-in-out hover-scale">
-                Rejoignez-nous
-            </a>
+    <section class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-5xl font-bold mb-6 animate-fade-in">Bienvenue sur DevConnect</h1>
+            <p class="text-xl mb-8 animate-fade-in delay-100">Le réseau social dédié aux développeurs pour partager, collaborer et innover ensemble.</p>
+            <a href="#" class="bg-white text-indigo-600 font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-gray-100 transition duration-300 animate-fade-in delay-200">Rejoignez-nous</a>
         </div>
     </section>
 
     <!-- About Section -->
-    <section class="py-20 bg-gray-50">
-        <div class="container mx-auto px-6 text-center animate-fadeInUp">
-            <h2 class="text-4xl font-semibold mb-6 gradient-text">À propos de DevConnect</h2>
-            <p class="text-gray-700 max-w-2xl mx-auto">
-                Créez un réseau social pour développeurs afin de partager des connaissances techniques, des projets et des opportunités professionnelles.
-            </p>
+    <section class="py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-6 animate-fade-in">À propos de DevConnect</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto animate-fade-in delay-100">Créez un réseau social pour développeurs afin de partager des connaissances techniques, des projets et des opportunités professionnelles.</p>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section class="py-20 bg-white">
+    <section class="bg-white py-20">
         <div class="container mx-auto px-6">
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Feature Cards -->
-                <div class="gradient-border p-8 rounded-lg shadow-md hover:shadow-lg transition duration-150 ease-in-out card-hover">
-                    <h4 class="text-2xl font-semibold mb-4 gradient-text">Profil Utilisateur Enrichi</h4>
-                    <p class="text-gray-700">Ajoutez vos compétences, projets, certifications et intégrez votre portfolio GitHub/GitLab.</p>
+            <h2 class="text-3xl font-bold text-center mb-12 animate-fade-in">Features</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-gray-50 p-8 rounded-lg shadow-md hover:shadow-lg transition duration-300 animate-fade-in delay-100">
+                    <h3 class="text-xl font-semibold mb-4">Profil Utilisateur Enrichi</h3>
+                    <p class="text-gray-600">Ajoutez vos compétences, projets, certifications et intégrez votre portfolio GitHub/GitLab.</p>
                 </div>
-                <div class="gradient-border p-8 rounded-lg shadow-md hover:shadow-lg transition duration-150 ease-in-out card-hover">
-                    <h4 class="text-2xl font-semibold mb-4 gradient-text">Ajout de Connexions</h4>
-                    <p class="text-gray-700">Envoyez, acceptez et gérez vos connexions pour collaborer avec d'autres développeurs.</p>
+                <!-- Feature 2 -->
+                <div class="bg-gray-50 p-8 rounded-lg shadow-md hover:shadow-lg transition duration-300 animate-fade-in delay-200">
+                    <h3 class="text-xl font-semibold mb-4">Ajout de Connexions</h3>
+                    <p class="text-gray-600">Envoyez, acceptez et gérez vos connexions pour collaborer avec d'autres développeurs.</p>
                 </div>
-                <div class="gradient-border p-8 rounded-lg shadow-md hover:shadow-lg transition duration-150 ease-in-out card-hover">
-                    <h4 class="text-2xl font-semibold mb-4 gradient-text">Publications Techniques</h4>
-                    <p class="text-gray-700">Partagez articles, snippets de code et tutoriels pour enrichir la communauté.</p>
+                <!-- Feature 3 -->
+                <div class="bg-gray-50 p-8 rounded-lg shadow-md hover:shadow-lg transition duration-300 animate-fade-in delay-300">
+                    <h3 class="text-xl font-semibold mb-4">Publications Techniques</h3>
+                    <p class="text-gray-600">Partagez articles, snippets de code et tutoriels pour enrichir la communauté.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Call to Action -->
-    <section class="gradient-black text-white py-32 relative overflow-hidden">
-        <div class="container mx-auto px-6 text-center animate-fadeInUp">
-            <h2 class="text-4xl font-semibold mb-6 floating">Prêt à rejoindre la communauté des développeurs ?</h2>
-            <p class="text-xl mb-8">Créez votre profil et commencez à partager vos connaissances dès aujourd'hui !</p>
-            <a href="#" class="inline-block bg-white text-gray-900 font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-gray-100 transition duration-150 ease-in-out hover-scale">
-                Créer un compte
-            </a>
+    <section class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-6 animate-fade-in">Prêt à rejoindre la communauté des développeurs ?</h2>
+            <p class="text-xl mb-8 animate-fade-in delay-100">Créez votre profil et commencez à partager vos connaissances dès aujourd'hui !</p>
+            <a href="#" class="bg-white text-indigo-600 font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-gray-100 transition duration-300 animate-fade-in delay-200">Créer un compte</a>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="gradient-black text-white py-6">
+    <footer class="bg-gray-800 text-white py-10">
         <div class="container mx-auto px-6 text-center">
             <p>&copy; 2025 DevConnect. Tous droits réservés.</p>
         </div>
     </footer>
+
+    <!-- JavaScript for Animations -->
+    <script>
+        // Add fade-in animation to elements with the `animate-fade-in` class
+        document.addEventListener('DOMContentLoaded', () => {
+            const animateElements = document.querySelectorAll('.animate-fade-in');
+            animateElements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.add('opacity-100', 'translate-y-0');
+                }, index * 200); // Delay each element by 200ms
+            });
+        });
+    </script>
+
+    <!-- Tailwind Animation Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: 0, transform: 'translateY(20px)' },
+                            '100%': { opacity: 1, transform: 'translateY(0)' },
+                        },
+                    },
+                },
+            },
+        };
+    </script>
 </body>
 </html>
