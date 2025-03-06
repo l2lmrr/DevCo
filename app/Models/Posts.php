@@ -21,7 +21,7 @@ class Posts extends Model
 
     public function comments()
     {
-        return $this->hasMany(Comments::class);
+        return $this->hasMany(Comments::class, 'post_id');
     }
 
     public function likes()
@@ -34,7 +34,6 @@ class Posts extends Model
         return $this->belongsToMany(Tags::class, 'post_tag');
     }
 
-    // Define the relationship with Content
     public function content()
     {
         return $this->hasMany(Content::class);

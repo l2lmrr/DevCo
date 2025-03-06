@@ -181,15 +181,52 @@
                                         </svg>
                                     </button>
                                     
-                                    <button class="hover:text-blue-600">Comment</button>
-                                </div>
-                            </div>
+                                  <!-- Comment Button -->
+                    <button class="hover:text-blue-600" onclick="toggleComments({{ $post->id }})">Comment</button>
+                </div>
+            </div>
+
+            <!-- Comments Section -->
+            <div id="comments-section-{{ $post->id }}" class="mt-4 hidden">
+                <!-- Comments List -->
+                <div class="space-y-4">
+                    @foreach($post->comments as $comment)
+                    <div class="flex items-start space-x-3">
+                        <!-- User Avatar -->
+                        <img src="{{ $comment->user->profile->image ? asset('storage/' . $comment->user->profile->image) : 'default-avatar-url' }}" alt="User Avatar" class="w-8 h-8 rounded-full">
+                        <!-- Comment Content -->
+                        <div>
+                            <p class="font-semibold text-gray-800">{{ $comment->user->name }}</p>
+                            <p class="text-gray-600 text-sm">{{ $comment->created_at->format('M d, Y') }}</p>
+                            <p class="mt-1 text-gray-700">{{ $comment->content }}</p>
+
+                            <!-- Delete Comment Button (for comment owner) -->
+                            @if($comment->user_id === auth()->id())
+                            <form action="{{ route('comment.destroy', $comment->id) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-500 hover:text-red-700 text-sm">Delete</button>
+                            </form>
+                            @endif
                         </div>
-                        @endforeach
-                    @endif
+                    </div>
+                    @endforeach
+                </div>
+
+                <!-- Add Comment Form -->
+                <div class="mt-6">
+                    <form id="comment-form-{{ $post->id }}" onsubmit="submitComment(event, {{ $post->id }})">
+                        @csrf
+                        <textarea name="content" rows="3" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Write a comment..."></textarea>
+                        <button type="submit" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Post Comment</button>
+                    </form>
                 </div>
             </div>
         </div>
+        @endforeach
+    @endif
+</div> 
+                                </div>
     </div>
 
     <script>
@@ -264,6 +301,60 @@
                 console.error('Error checking like status:', error);
             }
         }
+// Toggle comments section
+function toggleComments(postId) {
+        const commentsSection = document.getElementById(`comments-section-${postId}`);
+        commentsSection.classList.toggle('hidden');
+    }
+
+    // Submit comment via AJAX
+    async function submitComment(event, postId) {
+        event.preventDefault();
+
+        const form = document.getElementById(`comment-form-${postId}`);
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch(`/posts/${postId}/comments`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    content: formData.get('content'),
+                }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const commentsSection = document.getElementById(`comments-section-${postId}`);
+
+                // Append the new comment to the comments list
+                const commentHtml = `
+                    <div class="flex items-start space-x-3">
+                        <img src="${data.user.profile_image}" alt="User Avatar" class="w-8 h-8 rounded-full">
+                        <div>
+                            <p class="font-semibold text-gray-800">${data.user.name}</p>
+                            <p class="text-gray-600 text-sm">Just now</p>
+                            <p class="mt-1 text-gray-700">${data.comment.content}</p>
+                        </div>
+                    </div>
+                `;
+
+                commentsSection.querySelector('.space-y-4').insertAdjacentHTML('beforeend', commentHtml);
+
+                // Clear the textarea
+                form.querySelector('textarea').value = '';
+            } else {
+                alert('Failed to post comment. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
     </script>
 
 </x-app-layout>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Posts;
 use App\Models\Content;
 use App\Models\Likes;
+use App\Models\Comments;
 use Illuminate\Http\Request;
 use App\Models\Connections;
 
@@ -109,13 +110,10 @@ class PostsController extends Controller
         $user = auth()->user();
 
         $postCount = Posts::where('user_id', $user->id)->count();
-    
         $connectionCount = Connections::where('user_id', $user->id)->count();
-
-        $posts = Posts::with('content')->orderBy('created_at', 'desc')->get();
+        $posts = Posts::with(['content', 'comments.user'])->orderBy('created_at', 'desc')->get();
     
         
-        $posts = Posts::with('content')->orderBy('created_at', 'desc')->get();
         return view('dashboard', compact('posts', 'postCount', 'connectionCount'));
     }
 

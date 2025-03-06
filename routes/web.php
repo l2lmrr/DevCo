@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostsController;
+use App\Http\Controllers\CommentController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -15,6 +17,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
 });
+
+Route::post('/posts/{postId}/comments', [CommentController::class, 'store'])->name('comment.store');
+Route::delete('/comments/{commentId}', [CommentController::class, 'destroy'])->name('comment.destroy');
 
 Route::get('/dashboard', [PostsController::class, 'dashboard'])->name('dashboard');
 Route::post('/posts', [PostsController::class, 'store'])->name('posts.store');
